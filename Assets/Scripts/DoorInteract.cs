@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class DoorInteract : MonoBehaviour, IInteractable //this is called an interface, look into it if you do not know what it is, they are going to be very helpful
+public class DoorInteract : MonoBehaviour, IInteractable 
 {
 
     [SerializeField] public Transform PlayerSpawner;
@@ -11,7 +11,11 @@ public class DoorInteract : MonoBehaviour, IInteractable //this is called an int
     public void Interact()
     {
         SceneManagement.SceneTrackerScript.Instance.DoorID = DoorID;
+        SceneManagement.SceneTrackerScript.Instance.currentSceneName = GoToScene;
         SceneManager.UnloadSceneAsync(gameObject.scene);
-        SceneManager.LoadSceneAsync(GoToScene);
+        SceneManager.LoadSceneAsync(GoToScene, LoadSceneMode.Additive);
+
+        Debug.Log("Active Scene : " + SceneManager.GetActiveScene().name);
     }
+
 }

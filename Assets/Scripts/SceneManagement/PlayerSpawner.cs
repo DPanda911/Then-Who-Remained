@@ -1,5 +1,5 @@
+using Player;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace SceneManagement
 {
@@ -8,11 +8,24 @@ namespace SceneManagement
         [SerializeField]
         GameObject player;
         [SerializeField] Transform InitSpawn;
+
+        private GameObject spawnedP;
+
         private void Start()
         {
+            if (GameObject.FindGameObjectsWithTag("Player").Length > -1)
+            {
+                foreach (GameObject p in GameObject.FindGameObjectsWithTag("Player"))
+                {
+                    Destroy(p);
+                }
+            }
+
+
             if(SceneTrackerScript.Instance.DoorID == -1)
             {
-                Instantiate(player, InitSpawn);
+                spawnedP = Instantiate(player, InitSpawn.transform.position, Quaternion.identity);
+                SceneTrackerScript.Instance.PutThingInRightScene(spawnedP);
                 return;
             }
 
@@ -20,7 +33,8 @@ namespace SceneManagement
             {
                 if (Door.DoorID == SceneTrackerScript.Instance.DoorID)
                 {
-                    Instantiate(player, Door.PlayerSpawner);
+                    spawnedP = Instantiate(player, Door.PlayerSpawner.transform.position,Quaternion.identity);
+                    SceneTrackerScript.Instance.PutThingInRightScene(spawnedP);
                     break;
                 }
             }
