@@ -1,5 +1,6 @@
-using Player;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace SceneManagement
 {
@@ -13,6 +14,19 @@ namespace SceneManagement
 
         private void Start()
         {
+            StartCoroutine(checkLoadedScenes());
+
+        }
+
+        IEnumerator checkLoadedScenes()
+        {
+            yield return new WaitForSeconds(.01f);
+
+            if (!SceneManager.GetSceneByBuildIndex(0).isLoaded)
+            {
+                SceneManager.LoadSceneAsync(0, LoadSceneMode.Additive);
+            }
+            yield return new WaitForSeconds(.075f);
             if (GameObject.FindGameObjectsWithTag("Player").Length > -1)
             {
                 foreach (GameObject p in GameObject.FindGameObjectsWithTag("Player"))
@@ -22,24 +36,25 @@ namespace SceneManagement
             }
 
 
-            if(SceneTrackerScript.Instance.DoorID == -1)
+            if (SceneTrackerScript.Instance.DoorID == -1)
             {
                 spawnedP = Instantiate(player, InitSpawn.transform.position, Quaternion.identity);
                 SceneTrackerScript.Instance.PutThingInRightScene(spawnedP);
-                return;
+                yield return null;
             }
 
-            foreach(DoorInteract Door in FindObjectsByType<DoorInteract>(0))
+            foreach (DoorInteract Door in FindObjectsByType<DoorInteract>(0))
             {
                 if (Door.DoorID == SceneTrackerScript.Instance.DoorID)
                 {
-                    spawnedP = Instantiate(player, Door.PlayerSpawner.transform.position,Quaternion.identity);
+                    spawnedP = Instantiate(player, Door.PlayerSpawner.transform.position, Quaternion.identity);
                     SceneTrackerScript.Instance.PutThingInRightScene(spawnedP);
                     break;
                 }
             }
-            
+
         }
+
     }
 }
 

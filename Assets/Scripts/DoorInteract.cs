@@ -1,9 +1,9 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class DoorInteract : MonoBehaviour, IInteractable 
 {
-
     [SerializeField] public Transform PlayerSpawner;
     [SerializeField] private string GoToScene;
     [SerializeField] public int DoorID;
@@ -17,5 +17,5 @@ public class DoorInteract : MonoBehaviour, IInteractable
 
         Debug.Log("Active Scene : " + SceneManager.GetActiveScene().name);
     }
-
+   
 }
