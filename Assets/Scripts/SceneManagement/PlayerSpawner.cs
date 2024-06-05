@@ -10,11 +10,23 @@ namespace SceneManagement
         GameObject player;
         [SerializeField] Transform InitSpawn;
 
-        private GameObject spawnedP;
+    //    private GameObject spawnedP;
 
         private void Start()
         {
-            StartCoroutine(checkLoadedScenes());
+         //   StartCoroutine(checkLoadedScenes()); I dont think this is nessciary anymore
+            if (SceneTrackerScript.Instance.DoorID == -1)
+            {
+                player.transform.position = InitSpawn.transform.position;
+            }
+
+            foreach (DoorInteract Door in FindObjectsByType<DoorInteract>(0))
+            {
+                if (Door.DoorID == SceneTrackerScript.Instance.DoorID)
+                {
+                    player.transform.position = Door.PlayerSpawner.transform.position;
+                }
+            }
 
         }
 
@@ -38,8 +50,9 @@ namespace SceneManagement
 
             if (SceneTrackerScript.Instance.DoorID == -1)
             {
-                spawnedP = Instantiate(player, InitSpawn.transform.position, Quaternion.identity);
-                SceneTrackerScript.Instance.PutThingInRightScene(spawnedP);
+            //    spawnedP = Instantiate(player, InitSpawn.transform.position, Quaternion.identity);
+            player.transform.position = InitSpawn.transform.position;
+            //    SceneTrackerScript.Instance.PutThingInRightScene(spawnedP);
                 yield return null;
             }
 
@@ -47,8 +60,9 @@ namespace SceneManagement
             {
                 if (Door.DoorID == SceneTrackerScript.Instance.DoorID)
                 {
-                    spawnedP = Instantiate(player, Door.PlayerSpawner.transform.position, Quaternion.identity);
-                    SceneTrackerScript.Instance.PutThingInRightScene(spawnedP);
+                    //    spawnedP = Instantiate(player, Door.PlayerSpawner.transform.position, Quaternion.identity);
+                    player.transform.position = Door.PlayerSpawner.transform.position;
+                //    SceneTrackerScript.Instance.PutThingInRightScene(spawnedP);
                     break;
                 }
             }
