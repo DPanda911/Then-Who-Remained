@@ -19,13 +19,14 @@ public class NoteBook : MonoBehaviour
     private void Awake()
     {
         inputs = new PlayerInputs();
-        notePage = GetComponentsInChildren<TMP_InputField>();
+        notePage = GetComponentsInChildren<TMP_InputField>(true);
         notePagesDisplay_GO = new GameObject[notePage.Length];
         for (int i = 0; i < notePage.Length; i++)
         {
             notePagesDisplay_GO[i] = notePage[i].gameObject;
         }
         notePageIndex = 0;
+    //    Debug.Log(notePagesDisplay_GO.Length);
     }
     private void OnEnable()
     {
@@ -48,16 +49,26 @@ public class NoteBook : MonoBehaviour
     }
 
     bool canOpen = true;
+    bool isOpen = false;
     bool pressN = true;
     bool pressP = true;
     void Update()
     {
 
-        if (NotebookIn.IsPressed() && canOpen)
+        if (NotebookIn.IsPressed() && canOpen && !isOpen)
         {
-            notebook.SetActive(!notebook.activeInHierarchy);
+            notebook.SetActive(true);
+            PlayerDisable.Instance.DisablePMovement(true);
            // PlayerDisable.Instance.DisablePMovement(!notebook.activeInHierarchy);
             canOpen = false;
+            isOpen = true;
+        }
+        if(NotebookIn.IsPressed() && canOpen && isOpen)
+        {
+            notebook.SetActive(false);
+            PlayerDisable.Instance.DisablePMovement(false);
+            canOpen = false;
+            isOpen = false;
         }
 
         if (NotebookIn.WasReleasedThisFrame())

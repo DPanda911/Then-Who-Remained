@@ -342,7 +342,7 @@ namespace Player
                 {
                     ""name"": """",
                     ""id"": ""0aebef6c-f58e-4889-9404-85db7e746114"",
-                    ""path"": ""<Keyboard>/n"",
+                    ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

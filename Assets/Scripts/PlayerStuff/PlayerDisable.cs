@@ -15,7 +15,7 @@ public class PlayerDisable : MonoBehaviour
     private static PlayerDisable _instance;
     public static PlayerDisable Instance { get { return _instance; } }
 
-    private GameObject player;
+    [SerializeField] private GameObject player;
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -24,19 +24,13 @@ public class PlayerDisable : MonoBehaviour
             _instance = this;
     }
 
-    private void GetCurrentPlayerOBJ()
+    public void SetCurrentPlayerOBJ(GameObject p)
     {
-        Debug.Log("Hmmm");
-        player = GameObject.FindWithTag("Player");
+        player = p;
 
-        p_Interact = player.GetComponent<InteractionHandler>();
-        p_NoteBook = player.GetComponent<NoteBook>();
+        p_MovementHandler = player.GetComponent<MovementHandler>();
         p_Interact = player.GetComponent<InteractionHandler>();
 
-
-        //p_Interact = FindFirstObjectByType<InteractionHandler>();
-        //p_NoteBook = FindFirstObjectByType<NoteBook>();
-        //p_Interact = FindFirstObjectByType<InteractionHandler>();
     }
 
     public void CompleteDisable(bool enable)
@@ -48,19 +42,16 @@ public class PlayerDisable : MonoBehaviour
 
     public void DisablePMovement(bool enable)
     {
-        GetCurrentPlayerOBJ();
-        p_MovementHandler.enabled = enable;
+        p_MovementHandler.enabled = !enable;
     }
 
     public void DisablePInteract(bool enable)
     {
-            GetCurrentPlayerOBJ();
-        p_Interact.enabled = enable;
+        p_Interact.enabled = !enable;
     }
     public void DisableNote(bool enable)
     {
-            GetCurrentPlayerOBJ();
-        p_NoteBook.enabled = enable;
+        p_NoteBook.enabled = !enable;
     }
 
 }   
