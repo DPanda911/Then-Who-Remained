@@ -608,8 +608,8 @@ PlayerSettings:
   editorAssembliesCompatibilityLevel: 1
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Then, Who Remained
-  metroPackageVersion: 
+  metroPackageName: ThenWhoRemained
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -617,7 +617,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Then, Who Remained
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: Then, Who Remained
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
