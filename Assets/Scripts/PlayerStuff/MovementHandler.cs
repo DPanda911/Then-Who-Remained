@@ -8,44 +8,31 @@ namespace Player
         [SerializeField]
         public float moveSpeed;
 
-        private PlayerInputs input;
-        private InputAction move;
-
         private Rigidbody2D rb;
         private Animator anim;
+
 
         private Vector2 moveDir;
         void Awake()
         {
-            input = new PlayerInputs();
             rb = GetComponent<Rigidbody2D>();
             anim = GetComponentInChildren<Animator>();
         }
 
-
-        private void OnEnable()
+        public void OnMove(InputAction.CallbackContext context)
         {
-            move = input.Player.Move;
-            move.Enable();
+           moveDir = context.ReadValue<Vector2>();
         }
-
-        private void OnDisable()
-        {
-            move.Disable();
-        }
-
 
         void Update()
         {
-            moveDir = move.ReadValue<Vector2>();
-
-            if(move.ReadValue<Vector2>() != Vector2.zero)
+            if(moveDir != Vector2.zero)
                 anim.SetBool("IsMoving", true);
             else
                 anim.SetBool("IsMoving", false);
 
-            anim.SetInteger("PlayerHoriNum", Mathf.RoundToInt(move.ReadValue<Vector2>().x));
-            anim.SetInteger("PlayerVertNum", Mathf.RoundToInt(move.ReadValue<Vector2>().y));
+            anim.SetInteger("PlayerHoriNum", Mathf.RoundToInt(moveDir.x));
+            anim.SetInteger("PlayerVertNum", Mathf.RoundToInt(moveDir.y));
         }
 
         private void FixedUpdate()

@@ -5,31 +5,24 @@ namespace Player
 {
     public class InteractionHandler : MonoBehaviour
     {
-        private PlayerInputs inputs;
-        private InputAction Interact;
+        IInteractable interactable;
+        bool canInteract;
 
-        private void Awake()
+        public void OnInteract(InputAction.CallbackContext context)
         {
-            inputs = new PlayerInputs();
-        }
-        private void OnEnable()
-        {
-            Interact = inputs.Player.Interact;
-            Interact.Enable();
-        }
-
-        private void OnDisable()
-        {
-            Interact.Disable();
+            if(context.started && canInteract)
+            {
+                interactable.Interact();
+            }
         }
 
         private void OnTriggerStay2D(Collider2D collision)
         {
             if (collision.GetComponent<IInteractable>() != null)
             {
-                if(Interact.IsPressed() )
-                    collision.GetComponent<IInteractable>().Interact();
-            }
+                canInteract = true;
+                interactable = collision.GetComponent<IInteractable>();
+            }else canInteract = false;
         }
     }
 
