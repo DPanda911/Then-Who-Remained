@@ -445,15 +445,6 @@ namespace Player
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""DialogueContinue"",
-                    ""type"": ""Button"",
-                    ""id"": ""c1e9a19b-fc29-4852-8db3-462252497e1d"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -874,17 +865,6 @@ namespace Player
                     ""action"": ""TrackedDeviceOrientation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ef200197-1c9b-4055-950b-ab0c473711fd"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": ""Press"",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""DialogueContinue"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -972,7 +952,6 @@ namespace Player
             m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
             m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
             m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
-            m_UI_DialogueContinue = m_UI.FindAction("DialogueContinue", throwIfNotFound: true);
         }
 
         ~@PlayerInputs()
@@ -1136,7 +1115,6 @@ namespace Player
         private readonly InputAction m_UI_ScrollWheel;
         private readonly InputAction m_UI_TrackedDevicePosition;
         private readonly InputAction m_UI_TrackedDeviceOrientation;
-        private readonly InputAction m_UI_DialogueContinue;
         public struct UIActions
         {
             private @PlayerInputs m_Wrapper;
@@ -1151,7 +1129,6 @@ namespace Player
             public InputAction @ScrollWheel => m_Wrapper.m_UI_ScrollWheel;
             public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
             public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
-            public InputAction @DialogueContinue => m_Wrapper.m_UI_DialogueContinue;
             public InputActionMap Get() { return m_Wrapper.m_UI; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1191,9 +1168,6 @@ namespace Player
                 @TrackedDeviceOrientation.started += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed += instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled += instance.OnTrackedDeviceOrientation;
-                @DialogueContinue.started += instance.OnDialogueContinue;
-                @DialogueContinue.performed += instance.OnDialogueContinue;
-                @DialogueContinue.canceled += instance.OnDialogueContinue;
             }
 
             private void UnregisterCallbacks(IUIActions instance)
@@ -1228,9 +1202,6 @@ namespace Player
                 @TrackedDeviceOrientation.started -= instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.performed -= instance.OnTrackedDeviceOrientation;
                 @TrackedDeviceOrientation.canceled -= instance.OnTrackedDeviceOrientation;
-                @DialogueContinue.started -= instance.OnDialogueContinue;
-                @DialogueContinue.performed -= instance.OnDialogueContinue;
-                @DialogueContinue.canceled -= instance.OnDialogueContinue;
             }
 
             public void RemoveCallbacks(IUIActions instance)
@@ -1314,7 +1285,6 @@ namespace Player
             void OnScrollWheel(InputAction.CallbackContext context);
             void OnTrackedDevicePosition(InputAction.CallbackContext context);
             void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
-            void OnDialogueContinue(InputAction.CallbackContext context);
         }
     }
 }

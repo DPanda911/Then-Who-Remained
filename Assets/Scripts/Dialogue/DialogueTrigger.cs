@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-public class DialogueTrigger : MonoBehaviour
+public class DialogueTrigger : MonoBehaviour, IInteractable
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     [Header("Visual Cue")]
@@ -11,28 +11,27 @@ public class DialogueTrigger : MonoBehaviour
 
     private bool playerInRange;
 
-    private bool isPressing; 
+    private bool isPressing;
+
+    
 
     private void Awake()
     {
         playerInRange = false;
         visualCue.SetActive(false);
+
+        
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (playerInRange)
         {
             visualCue.SetActive(true);
-            
         }
         else
         {
             visualCue.SetActive(false);
-            if (isPressing)
-            {
-                Debug.Log(InkJSON.text);
-            }
         }
     }
 
@@ -52,8 +51,29 @@ public class DialogueTrigger : MonoBehaviour
         }
     }
 
+    /*
     public void onPress(InputAction.CallbackContext context)
     {
-        isPressing = context.ReadValueAsButton();
+        if (context.started)
+        {
+
+            
+            if (playerInRange)
+            {
+                visualCue.SetActive(true);
+
+            }
+            else
+            {
+                visualCue.SetActive(false);
+                
+            }
+        }
+    }
+    */
+    public void Interact()
+    {
+        
+        Debug.Log(InkJSON.text);
     }
 }
