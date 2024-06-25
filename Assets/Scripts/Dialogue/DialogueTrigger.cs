@@ -9,9 +9,9 @@ public class DialogueTrigger : MonoBehaviour, IInteractable
     [Header("Ink JSON")]
     [SerializeField] private TextAsset InkJSON;
 
-    private bool playerInRange;
+    public bool playerInRange;
 
-    private bool isPressing;
+    
 
     
 
@@ -51,29 +51,16 @@ public class DialogueTrigger : MonoBehaviour, IInteractable
         }
     }
 
-    /*
-    public void onPress(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-
-            
-            if (playerInRange)
-            {
-                visualCue.SetActive(true);
-
-            }
-            else
-            {
-                visualCue.SetActive(false);
-                
-            }
-        }
-    }
-    */
+    
     public void Interact()
     {
+        if (playerInRange)
+        {
+            if (DialogueManager.GetInstance().dialogueIsPlaying == false)
+            {
+                DialogueManager.GetInstance().EnterDialogueMode(InkJSON);
+            }
+        }
         
-        Debug.Log(InkJSON.text);
     }
 }
