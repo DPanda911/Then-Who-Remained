@@ -681,7 +681,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visualCue: {fileID: 1730401885}
-  InkJSON: {fileID: 4900000, guid: a009b4e6907a6504697ddb498fa73a5a, type: 3}
+  InkJSON: {fileID: 4900000, guid: 897fe8c6081622b42968a583de59c4f9, type: 3}
   playerInRange: 0
 --- !u!70 &849365076
 CapsuleCollider2D:
@@ -1007,6 +1007,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 30de94ab-5fb3-46f3-bbcb-30c367af992a
     m_ActionName: 'Dialogue/DialogueContinue[/Keyboard/e]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 82df6148-2b69-46dd-9cb3-891ee09468c8
+    m_ActionName: Dialogue/DialogueChoiceChosen
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Dialogue
