@@ -162,6 +162,7 @@ public class DialogueManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
 <<<<<<< HEAD
+<<<<<<< HEAD
         
         Debug.Log("Is the coroutine working");
     }
@@ -204,10 +205,17 @@ public class DialogueManager : MonoBehaviour
 =======
     }
 
+=======
+    }
+
+>>>>>>> parent of d85b20b (Still a WIP)
     public void MakeChoice(int choiceIndex)
     {
         Debug.Log("MakeChoice is playing?");
         currentStory.ChooseChoiceIndex(choiceIndex);
+<<<<<<< HEAD
+>>>>>>> parent of d85b20b (Still a WIP)
+=======
 >>>>>>> parent of d85b20b (Still a WIP)
     }
 }

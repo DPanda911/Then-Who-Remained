@@ -119,6 +119,7 @@ NavMeshSettings:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
 <<<<<<< HEAD
+<<<<<<< HEAD
 --- !u!1 &167995922
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,6 +193,8 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 167995922}
   m_CullTransparentMesh: 1
+=======
+>>>>>>> parent of d85b20b (Still a WIP)
 =======
 >>>>>>> parent of d85b20b (Still a WIP)
 --- !u!1 &268178284
@@ -4187,6 +4190,7 @@ MonoBehaviour:
   m_Padding: {x: -8, y: -5, z: -8, w: -5}
   m_Softness: {x: 0, y: 0}
 <<<<<<< HEAD
+<<<<<<< HEAD
 --- !u!1 &1745281426
 GameObject:
   m_ObjectHideFlags: 0
@@ -4401,6 +4405,8 @@ CanvasRenderer:
   m_CullTransparentMesh: 1
 =======
 >>>>>>> parent of d85b20b (Still a WIP)
+=======
+>>>>>>> parent of d85b20b (Still a WIP)
 --- !u!1 &1883702861
 GameObject:
   m_ObjectHideFlags: 0
@@ -4535,9 +4541,12 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
 <<<<<<< HEAD
+<<<<<<< HEAD
   m_AnchoredPosition: {x: 116.75, y: -54.2665}
   m_SizeDelta: {x: 176.49, y: 51.467}
 =======
+=======
+>>>>>>> parent of d85b20b (Still a WIP)
   m_AnchoredPosition: {x: 105, y: -28.800003}
   m_SizeDelta: {x: 200, y: 50}
 >>>>>>> parent of d85b20b (Still a WIP)
