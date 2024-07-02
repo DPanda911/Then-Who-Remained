@@ -1007,10 +1007,6 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 30de94ab-5fb3-46f3-bbcb-30c367af992a
     m_ActionName: 'Dialogue/DialogueContinue[/Keyboard/e]'
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 82df6148-2b69-46dd-9cb3-891ee09468c8
-    m_ActionName: Dialogue/DialogueChoiceChosen
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Dialogue
