@@ -68,7 +68,8 @@ public class DialogueManager : MonoBehaviour
 
         Debug.Log("MakeChoice is playing?");
         currentStory.ChooseChoiceIndex(choiceIndex);
-        makingChoice = false;
+        
+        
     }
 
 
@@ -141,7 +142,7 @@ public class DialogueManager : MonoBehaviour
     {
         
         Debug.Log("Is onPress working?");
-        if (context.started && dialogueIsPlaying && !makingChoice)
+        if (context.started && dialogueIsPlaying)
         {
             Debug.Log("Is context.started working?");
             ContinueStory();
@@ -154,10 +155,7 @@ public class DialogueManager : MonoBehaviour
     private void DisplayChoices()
     {
         List<Choice> currentChoices = currentStory.currentChoices;
-        if(currentChoices.Count > 0)
-        {
-            makingChoice = true; 
-        }
+        
 
         //Checks if the UI supports the amount of choices. For the game, our max amount will ALWAYS be four.
         if(currentChoices.Count > choices.Length)
@@ -217,7 +215,7 @@ public class DialogueManager : MonoBehaviour
                     displayNameText.text = tagValue;
                     break;
                 case portrait:
-                    Debug.Log("Portrait=" + tagValue);
+                    
                     portraitAnimator.Play(tagValue);
                     break;
                 case layout:
