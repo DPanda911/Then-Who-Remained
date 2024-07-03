@@ -1,7 +1,8 @@
-Once upon a time...
+Once upon a time... #layout:leftStart #speaker:Rocky #portrait:Rocky_Neutral 
 
- * There were two choices.
- * There were four lines of content.
+I'm so confused. #layout:right #speaker:Adnir #portrait:Adnir_Neutral 
 
-- They lived happily ever after.
+Please let this work.  #layout:left #speaker:Rocky #portrait:Rocky_Neutral
+
+I believe. #layout:right #speaker:Adnir #portrait:Adnir_Neutral 
     -> END

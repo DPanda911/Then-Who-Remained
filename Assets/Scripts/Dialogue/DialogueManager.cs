@@ -14,8 +14,10 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GameObject dialoguePanel;
 
     [SerializeField] private TextMeshProUGUI dialogueText;
-    [SerializeField] private TextMeshProUGUI displayNameText;
-    [SerializeField] private Animator portraitAnimator;
+    [SerializeField] private TextMeshProUGUI displayNameTextLeft;
+    [SerializeField] private TextMeshProUGUI displayNameTextRight;
+    [SerializeField] private Animator portraitAnimatorLeft;
+    [SerializeField] private Animator portraitAnimatorRight;
 
     private Animator layoutAnimator;
 
@@ -30,7 +32,11 @@ public class DialogueManager : MonoBehaviour
 
     public bool makingChoice;
 
+    private string whichSide;
+
     private static DialogueManager instance;
+
+   
 
     [Header("UI For Name, Portraits, and their Layouts")]
     private const string speakerTag = "speaker";
@@ -44,6 +50,7 @@ public class DialogueManager : MonoBehaviour
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
         layoutAnimator = dialoguePanel.GetComponent<Animator>();
+        whichSide = "left";
 
         choicesText = new TextMeshProUGUI[choices.Length];
         int index = 0;
@@ -80,7 +87,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     
-
+   
     public void EnterDialogueMode(TextAsset inkJSON)
     {
         currentStory = new Story(inkJSON.text);
@@ -91,8 +98,10 @@ public class DialogueManager : MonoBehaviour
         PlayerDisable.Instance.DisablePMovement(true);
 
         //Reset Name, Portrait, and layout.
-        displayNameText.text = "???";
-        portraitAnimator.Play("default");
+        displayNameTextLeft.text = "???";
+        displayNameTextRight.text = "???";
+        portraitAnimatorLeft.Play("default");
+        portraitAnimatorRight.Play("default");
         layoutAnimator.Play("middle");
 
 
@@ -106,6 +115,11 @@ public class DialogueManager : MonoBehaviour
 
         Debug.Log("The story is now over");
         PlayerDisable.Instance.DisablePMovement(false);
+        displayNameTextLeft.text = "???";
+        displayNameTextRight.text = "???";
+        portraitAnimatorLeft.Play("default");
+        portraitAnimatorRight.Play("default");
+        layoutAnimator.Play("middle");
     }
 
     private void ContinueStory()
@@ -133,7 +147,7 @@ public class DialogueManager : MonoBehaviour
     {
         
         Debug.Log("Is onPress working?");
-        if (context.started && dialogueIsPlaying)
+        if (context.started && dialogueIsPlaying && !makingChoice)
         {
             Debug.Log("Is context.started working?");
             ContinueStory();
@@ -147,7 +161,10 @@ public class DialogueManager : MonoBehaviour
     {
         List<Choice> currentChoices = currentStory.currentChoices;
         
-
+        if(currentChoices.Count > 0)
+        {
+            makingChoice = true;
+        }
         //Checks if the UI supports the amount of choices. For the game, our max amount will ALWAYS be four.
         if(currentChoices.Count > choices.Length)
         {
@@ -186,8 +203,10 @@ public class DialogueManager : MonoBehaviour
     public void MakeChoice(int choiceIndex)
     {
 
-        Debug.Log("MakeChoice is playing?");
+        
         currentStory.ChooseChoiceIndex(choiceIndex);
+        makingChoice = false;
+        ContinueStory();
         
     }
 
@@ -205,24 +224,161 @@ public class DialogueManager : MonoBehaviour
             string tagValue = splitTag[1].Trim();
 
             //Handles the tag
-            switch (tagKey)
+           if(tagKey == "layout")
+            {
+                if(tagValue == "left")
+                {
+                    whichSide = "left";
+                    Debug.Log("This side is left.");
+                }
+                if (tagValue == "right")
+                {
+                    whichSide = "right";
+                    Debug.Log("This side is right.");
+                }
+                if (tagValue == "leftStart")
+                {
+                    whichSide = "leftStart"; 
+                    Debug.Log("This side is leftStart.");
+
+                }
+                if(tagValue == "middle")
+                {
+                    whichSide = "middle;";
+                }
+            }
+            if (whichSide == "middle")
+            {
+                switch (tagKey)
+                {
+                    case speakerTag:
+                        displayNameTextLeft.text = tagValue;
+
+                        break;
+                    case portrait:
+                        Debug.Log("Portrait=" + tagValue);
+                        portraitAnimatorLeft.Play(tagValue);
+
+                        break;
+                    case layout:
+                        Debug.Log(tagValue);
+                        layoutAnimator.Play(tagValue);
+
+                        break;
+
+                    default:
+                        Debug.LogError("Tag came in, but it is not currently being handles: " + tag);
+                        break;
+                }
+            }
+
+            if (whichSide == "leftStart")
+            {
+                switch (tagKey)
+                {
+                    case speakerTag:
+                        displayNameTextLeft.text = tagValue;
+
+                        break;
+                    case portrait:
+                        Debug.Log("Portrait=" + tagValue);
+                        portraitAnimatorLeft.Play(tagValue);
+
+                        break;
+                    case layout:
+                        Debug.Log(tagValue);
+                        layoutAnimator.Play(tagValue);
+
+                        break;
+
+                    default:
+                        Debug.LogError("Tag came in, but it is not currently being handles: " + tag);
+                        break;
+                }
+            }
+
+            if(whichSide == "left")
+            {
+                switch (tagKey)
+                {
+                    case speakerTag:
+                        displayNameTextLeft.text = tagValue;
+
+                        break;
+                    case portrait:
+                        Debug.Log("Portrait=" + tagValue);
+                        portraitAnimatorLeft.Play(tagValue);
+
+                        break;
+                    case layout:
+                        Debug.Log(tagValue);
+                        layoutAnimator.Play(tagValue);
+                        
+                        break;
+
+                    default:
+                        Debug.LogError("Tag came in, but it is not currently being handles: " + tag);
+                        break;
+                }
+            }
+
+            if (whichSide == "right")
+            {
+                switch (tagKey)
+                {
+                    case speakerTag:
+                        displayNameTextRight.text = tagValue;
+
+                        break;
+                    case portrait:
+                        Debug.Log("Portrait=" + tagValue);
+                        portraitAnimatorRight.Play(tagValue);
+
+                        break;
+                    case layout:
+                        Debug.Log(tagValue);
+                        layoutAnimator.Play(tagValue);
+                        
+                        break;
+
+                    default:
+                        Debug.LogError("Tag came in, but it is not currently being handles: " + tag);
+                        break;
+                }
+            }
+
+            /*switch (tagKey)
             {
                 case speakerTag:
-                    displayNameText.text = tagValue;
+                    displayNameTextLeft.text = tagValue;
+
                     break;
                 case portrait:
                     Debug.Log("Portrait=" + tagValue);
-                    portraitAnimator.Play(tagValue);
+                    portraitAnimatorLeft.Play(tagValue);
+
                     break;
                 case layout:
+            Debug.Log(tagValue);
                     layoutAnimator.Play(tagValue);
-                    break;
+                    if(tagValue == "left")
+                    {
+                        Debug.Log("Left side is playing");
+                    }
+                    if (tagValue == "left")
+                    {
+                       Debug.Log("Left side is playing");
+                    }
+            break;
 
                 default:
                     Debug.LogError("Tag came in, but it is not currently being handles: " + tag);
                     break;
             }
+            */
 
         }
+            
+        }
     }
-}
+
