@@ -42,6 +42,7 @@ public class PlayerDisable : MonoBehaviour
 
     public void DisablePMovement(bool enable)
     {
+        p_MovementHandler.StopMovement();
         p_MovementHandler.enabled = !enable;
     }
 

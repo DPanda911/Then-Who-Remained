@@ -39,6 +39,12 @@ namespace Player
         {
             rb.velocity = moveDir * moveSpeed;
         }
+
+        public void StopMovement()
+        {
+            rb.velocity = Vector2.zero;
+            anim.SetBool("IsMoving", false);
+        }
     }
 
 
