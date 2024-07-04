@@ -15,3 +15,5 @@ MonoBehaviour:
   itemName: test1
   Icon: {fileID: 0}
   KeyID: Door1
+  description: the description should go here. once inventory mangaing is added,
+    this text will display on the item when selected in the inventory menu

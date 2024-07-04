@@ -10,4 +10,6 @@ public class GenericItem : ScriptableObject
     public string KeyID = "";
     // im actually not sure this^ is necessary
 
+    [TextArea]
+    public string description;
 }
