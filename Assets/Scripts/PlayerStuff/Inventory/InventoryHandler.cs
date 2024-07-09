@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.InputSystem;
 
 public class InventoryHandler : MonoBehaviour
 {
@@ -14,8 +16,11 @@ public class InventoryHandler : MonoBehaviour
 
     public List<GenericItem> CurrentItems = new List<GenericItem>();
 
-    [SerializeField] GameObject[] invHolder;
+    
     [SerializeField] GameObject Inventory;
+    [SerializeField] TMP_Text[] buttonNames;
+
+    bool opened;
     /// <TODO>
     /// make a keybind to open the inventory
     /// display a button for every item in the current inv
@@ -51,9 +56,54 @@ public class InventoryHandler : MonoBehaviour
         }
     }
 
-    void DisplayInventory()
+    public void OnInventory(InputAction.CallbackContext context)
     {
+        //we should also have a check for wether or not the player should be able to open the inventory but 
+        //I dont feel like it at the moment
+        if (context.started)
+        {
+            if (!opened)
+                OpenInv();
+            else
+                CloseInv();
+        }
+    }
 
+    void OpenInv()
+    {
+        opened = true;
+        Inventory.SetActive(true);
+        PlayerDisable.Instance.DisablePMovement(true);
+        GenInvDisplay();
+    }
+
+    void CloseInv()
+    {
+        Inventory.SetActive(false);
+        PlayerDisable.Instance.DisablePMovement(false);
+        opened = false;
+    }
+    void GenInvDisplay()
+    {
+        int i = 0;
+        foreach (TMP_Text text in buttonNames) text.text = "placeholder"; //I know there's a better way to do this, I can not think of it right now
+        
+        foreach (GenericItem item in CurrentItems)
+        {
+            buttonNames[i].text = item.itemName;
+            buttonNames[i].transform.parent.gameObject.SetActive(true);
+
+            i++;
+        }
+
+        foreach(TMP_Text text in buttonNames)
+        {
+            if(text.text == "placeholder")
+            {
+                text.transform.parent.gameObject.SetActive(false);
+                Debug.Log("found placeholders");
+            }
+        }
     }
 
 }

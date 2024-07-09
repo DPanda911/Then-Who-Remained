@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BasicTestItem
   m_EditorClassIdentifier: 
   itemName: test1
-  Icon: {fileID: 0}
+  Icon: {fileID: -7436050298522061042, guid: ceb6fbccdf32166469253abe9ceb1dcf, type: 3}
   KeyID: Door1
   description: the description should go here. once inventory mangaing is added,
     this text will display on the item when selected in the inventory menu
