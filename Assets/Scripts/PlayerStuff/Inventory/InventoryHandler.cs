@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class InventoryHandler : MonoBehaviour
 {
@@ -16,7 +18,9 @@ public class InventoryHandler : MonoBehaviour
 
     public List<GenericItem> CurrentItems = new List<GenericItem>();
 
-    
+    [SerializeField] private GameObject DisplayScreen;
+    GenericItem _item;
+
     [SerializeField] GameObject Inventory;
     [SerializeField] TMP_Text[] buttonNames;
 
@@ -75,6 +79,9 @@ public class InventoryHandler : MonoBehaviour
         Inventory.SetActive(true);
         PlayerDisable.Instance.DisablePMovement(true);
         GenInvDisplay();
+
+        if (buttonNames[0].isActiveAndEnabled)
+            buttonNames[0].GetComponentInParent<Button>().Select();
     }
 
     void CloseInv()
@@ -90,9 +97,14 @@ public class InventoryHandler : MonoBehaviour
         
         foreach (GenericItem item in CurrentItems)
         {
+            Debug.Log(item.itemName);
             buttonNames[i].text = item.itemName;
             buttonNames[i].transform.parent.gameObject.SetActive(true);
-
+            buttonNames[i].GetComponentInParent<Button>().onClick.RemoveAllListeners();
+            buttonNames[i].GetComponentInParent<Button>().onClick.AddListener(
+                ()=> { UpdateItemInfo(item); TESTFORBUTTONIFWORKSAHH(); }
+                );
+            //buttonNames[i].GetComponentInParent<EventTrigger>().OnSelect()
             i++;
         }
 
@@ -104,6 +116,22 @@ public class InventoryHandler : MonoBehaviour
                 Debug.Log("found placeholders");
             }
         }
+    }
+
+    void UpdateItemInfo(GenericItem newItem)
+    {
+        _item = newItem;
+        DisplayScreen.SetActive(true);
+        DisplayScreen.GetComponentInChildren<TMP_Text>().text = _item.description;
+        DisplayScreen.GetComponentInChildren<Image>().sprite = _item.Icon;
+        //DisplayScreen.GetComponentInChildren<Button>(). figure out how to easily call different functions depending on what item is selected
+    }
+
+    void UpdateItemInfo() => DisplayScreen.SetActive(false); //if no item is assigned no item display
+
+    void TESTFORBUTTONIFWORKSAHH()
+    {
+        Debug.Log("I took so long trying to figure out why this did not work, only to realize I never set the Item display in the inspector ); ");
     }
 
 }
