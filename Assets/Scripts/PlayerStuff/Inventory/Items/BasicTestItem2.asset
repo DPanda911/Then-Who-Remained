@@ -16,3 +16,4 @@ MonoBehaviour:
   Icon: {fileID: 7245690677989368111, guid: 215687feeab0b7445b4a1cd86c82c2e1, type: 3}
   KeyID: 
   description: 'Descitption for test item 2 yea I sure hope this works '
+  ItemUse: 2

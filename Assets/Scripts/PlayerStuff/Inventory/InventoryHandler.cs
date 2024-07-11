@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System;
 
 public class InventoryHandler : MonoBehaviour
 {
@@ -102,9 +103,8 @@ public class InventoryHandler : MonoBehaviour
             buttonNames[i].transform.parent.gameObject.SetActive(true);
             buttonNames[i].GetComponentInParent<Button>().onClick.RemoveAllListeners();
             buttonNames[i].GetComponentInParent<Button>().onClick.AddListener(
-                ()=> { UpdateItemInfo(item); TESTFORBUTTONIFWORKSAHH(); }
+                ()=> { UpdateItemInfo(item);}
                 );
-            //buttonNames[i].GetComponentInParent<EventTrigger>().OnSelect()
             i++;
         }
 
@@ -124,14 +124,28 @@ public class InventoryHandler : MonoBehaviour
         DisplayScreen.SetActive(true);
         DisplayScreen.GetComponentInChildren<TMP_Text>().text = _item.description;
         DisplayScreen.GetComponentInChildren<Image>().sprite = _item.Icon;
-        //DisplayScreen.GetComponentInChildren<Button>(). figure out how to easily call different functions depending on what item is selected
+        DisplayScreen.GetComponentInChildren<Button>().onClick.RemoveAllListeners();
+        DisplayScreen.GetComponentInChildren<Button>().onClick.AddListener(
+            () => ItemOnUse(_item.ItemUse)
+            );
     }
 
     void UpdateItemInfo() => DisplayScreen.SetActive(false); //if no item is assigned no item display
 
-    void TESTFORBUTTONIFWORKSAHH()
+    void ItemOnUse(Enum ItemUses)
     {
-        Debug.Log("I took so long trying to figure out why this did not work, only to realize I never set the Item display in the inspector ); ");
+        switch (ItemUses)
+        {
+            case (GenericItem.itemUses.Nothing):
+                Debug.Log("Nothing is Happening.");
+                break;
+            case (GenericItem.itemUses.Something):
+                Debug.Log(" 'finally got the wildfire in my sock drawer under control' ");
+                break;
+            case (GenericItem.itemUses.Somethingelse):
+                Debug.Log("Out of the oridnary I mean.");
+                break;
+        }
     }
 
 }

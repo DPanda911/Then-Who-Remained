@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 [CreateAssetMenu(menuName = "New Items/Basic Item")]
 public class GenericItem : ScriptableObject
@@ -12,4 +13,12 @@ public class GenericItem : ScriptableObject
 
     [TextArea]
     public string description;
+
+    public itemUses ItemUse;
+    public enum itemUses //put generic name of thing here, will be handled in the InventoryHandler
+    {
+        Nothing,
+        Something,
+        Somethingelse 
+    }
 }
