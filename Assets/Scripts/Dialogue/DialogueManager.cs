@@ -5,10 +5,15 @@ using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using System.Collections;
-
+using Ink.UnityIntegration;
 public class DialogueManager : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [Header("Global Ink File")]
+    [SerializeField] private InkFile globalsInkFile;
+
+    [Header("Parameters")]
+    [SerializeField] private float typingSpeed = 0.05f;
 
     [Header("Dialogue UI")]
     [SerializeField] private GameObject dialoguePanel;
@@ -28,21 +33,26 @@ public class DialogueManager : MonoBehaviour
 
     private Story currentStory;
 
+    [Header("Checks")]
     public bool dialogueIsPlaying;
-
     public bool makingChoice;
-
     private string whichSide;
+    private Coroutine displayLineCoroutine;
+    private bool canContinueNextLine = false;
 
+    [Header("References")]
     private static DialogueManager instance;
+    private DialogueVariables dialogueVariables;
 
-   
 
     [Header("UI For Name, Portraits, and their Layouts")]
     private const string speakerTag = "speaker";
     private const string portrait = "portrait";
     private const string layout = "layout";
+
+
     
+
 
     void Start()
     {
@@ -68,6 +78,8 @@ public class DialogueManager : MonoBehaviour
             Debug.Log("there's more than one?!");
         }
         instance = this;
+
+        dialogueVariables = new DialogueVariables(globalsInkFile.filePath);
     }
 
     
@@ -94,8 +106,12 @@ public class DialogueManager : MonoBehaviour
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
 
+        dialogueVariables.StartListening(currentStory);
+
         dialogueText.text = currentStory.currentText;
         PlayerDisable.Instance.DisablePMovement(true);
+
+
 
         //Reset Name, Portrait, and layout.
         displayNameTextLeft.text = "???";
@@ -113,7 +129,8 @@ public class DialogueManager : MonoBehaviour
         dialoguePanel.SetActive(false);
         dialogueText.text = "";
 
-        Debug.Log("The story is now over");
+        dialogueVariables.StopListening(currentStory);
+
         PlayerDisable.Instance.DisablePMovement(false);
         displayNameTextLeft.text = "???";
         displayNameTextRight.text = "???";
@@ -125,17 +142,21 @@ public class DialogueManager : MonoBehaviour
     private void ContinueStory()
     {
         
-        Debug.Log("Is continueStory working correctly?");
+        
         if (currentStory.canContinue)
         {
             //dialogueText.text = "Hello?";
+            if(displayLineCoroutine != null)
+            {
+                StopCoroutine(displayLineCoroutine); 
+            }
             
-            dialogueText.text = currentStory.Continue();
-            Debug.Log("Can the story be continued?");
-
-            DisplayChoices();
+            displayLineCoroutine = StartCoroutine(displayLine(currentStory.Continue()));
 
             HandleTags(currentStory.currentTags);
+            DisplayChoices();
+            Debug.Log(currentStory.currentText);
+            
         }
         else
         {
@@ -146,10 +167,10 @@ public class DialogueManager : MonoBehaviour
     public void onPress(InputAction.CallbackContext context)
     {
         
-        Debug.Log("Is onPress working?");
+        
         if (context.started && dialogueIsPlaying && !makingChoice)
         {
-            Debug.Log("Is context.started working?");
+            
             ContinueStory();
    
         }
@@ -197,18 +218,49 @@ public class DialogueManager : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
         yield return new WaitForEndOfFrame();
         EventSystem.current.SetSelectedGameObject(choices[0].gameObject);
-        Debug.Log("Is the coroutine working");
+        
     }
 
     public void MakeChoice(int choiceIndex)
     {
 
-        
-        currentStory.ChooseChoiceIndex(choiceIndex);
-        makingChoice = false;
-        ContinueStory();
-        
+        if (canContinueNextLine)
+        {
+            currentStory.ChooseChoiceIndex(choiceIndex);
+            makingChoice = false;
+            Debug.Log("MakeChoice worked");
+            ContinueStory();
+        }
+
+}
+
+        public Ink.Runtime.Object GetVariableState(string variableName)
+    {
+        Ink.Runtime.Object variableValue = null;
+        dialogueVariables.variables.TryGetValue(variableName, out variableValue);
+        if(variableValue == null)
+        {
+            Debug.LogWarning("Ink Variable was found to be null: " + variableName);
+        }
+        return variableValue;
     }
+
+    private IEnumerator displayLine(string line)
+    {
+        dialogueText.text = "";
+        canContinueNextLine = false;
+
+        foreach(char letter in line.ToCharArray())
+        {
+            dialogueText.text += letter;
+            yield return new WaitForSeconds(typingSpeed);
+
+        }
+
+        canContinueNextLine = true;
+        Debug.Log("Is this displayLine working?");
+    }
+
 
     private void HandleTags(List<string> currentTags)
     {
@@ -229,17 +281,17 @@ public class DialogueManager : MonoBehaviour
                 if(tagValue == "left")
                 {
                     whichSide = "left";
-                    Debug.Log("This side is left.");
+                    
                 }
                 if (tagValue == "right")
                 {
                     whichSide = "right";
-                    Debug.Log("This side is right.");
+                    
                 }
                 if (tagValue == "leftStart")
                 {
                     whichSide = "leftStart"; 
-                    Debug.Log("This side is leftStart.");
+                    
 
                 }
                 if(tagValue == "middle")
@@ -247,6 +299,7 @@ public class DialogueManager : MonoBehaviour
                     whichSide = "middle;";
                 }
             }
+
             if (whichSide == "middle")
             {
                 switch (tagKey)
@@ -256,12 +309,12 @@ public class DialogueManager : MonoBehaviour
 
                         break;
                     case portrait:
-                        Debug.Log("Portrait=" + tagValue);
+                        
                         portraitAnimatorLeft.Play(tagValue);
 
                         break;
                     case layout:
-                        Debug.Log(tagValue);
+                        
                         layoutAnimator.Play(tagValue);
 
                         break;
@@ -281,12 +334,12 @@ public class DialogueManager : MonoBehaviour
 
                         break;
                     case portrait:
-                        Debug.Log("Portrait=" + tagValue);
+                        
                         portraitAnimatorLeft.Play(tagValue);
 
                         break;
                     case layout:
-                        Debug.Log(tagValue);
+                        
                         layoutAnimator.Play(tagValue);
 
                         break;
@@ -306,12 +359,12 @@ public class DialogueManager : MonoBehaviour
 
                         break;
                     case portrait:
-                        Debug.Log("Portrait=" + tagValue);
+                        
                         portraitAnimatorLeft.Play(tagValue);
 
                         break;
                     case layout:
-                        Debug.Log(tagValue);
+                        
                         layoutAnimator.Play(tagValue);
                         
                         break;
@@ -331,12 +384,12 @@ public class DialogueManager : MonoBehaviour
 
                         break;
                     case portrait:
-                        Debug.Log("Portrait=" + tagValue);
+                        
                         portraitAnimatorRight.Play(tagValue);
 
                         break;
                     case layout:
-                        Debug.Log(tagValue);
+                        
                         layoutAnimator.Play(tagValue);
                         
                         break;
