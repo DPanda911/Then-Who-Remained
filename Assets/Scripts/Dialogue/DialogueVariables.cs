@@ -8,11 +8,18 @@ public class DialogueVariables
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public Dictionary<string, Ink.Runtime.Object> variables { get; private set; }
 
-    public DialogueVariables(string globalIsFilePath)
+    public Story globalVariableStory;
+    private const string saveVariablesKey = "INK_VARIABLES";
+
+    public DialogueVariables(TextAsset loadGlobalsJSON)
     {
-        string inkFileContents = File.ReadAllText(globalIsFilePath);
-        Ink.Compiler compiler = new Ink.Compiler(inkFileContents);
-        Story globalVariableStory = compiler.Compile();
+        
+        globalVariableStory = new Story(loadGlobalsJSON.text);
+        if (PlayerPrefs.HasKey(saveVariablesKey))
+        {
+            string jsonState = PlayerPrefs.GetString(saveVariablesKey);
+            globalVariableStory.state.LoadJson(jsonState);
+        }
 
         variables =  new Dictionary<string, Ink.Runtime.Object>();
         foreach(string name in globalVariableStory.variablesState)
@@ -54,4 +61,17 @@ public class DialogueVariables
             story.variablesState.SetGlobal(variable.Key, variable.Value);
         }
     }
+
+    //Call this method to save variables!
+    public void saveVariables()
+    {
+        if(globalVariableStory != null)
+        {
+            //Load the current state of all our variables to the globals story
+            VariablesToStory(globalVariableStory);
+            PlayerPrefs.SetString(saveVariablesKey, globalVariableStory.state.ToJson());
+        }
+    }
+
+    
 }

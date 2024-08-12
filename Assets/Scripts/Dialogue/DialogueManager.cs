@@ -5,12 +5,11 @@ using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using System.Collections;
-using Ink.UnityIntegration;
 public class DialogueManager : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    [Header("Global Ink File")]
-    [SerializeField] private InkFile globalsInkFile;
+    [Header("Load Globals JSON")]
+    [SerializeField] private TextAsset loadGlobalsJSON;
 
     [Header("Parameters")]
     [SerializeField] private float typingSpeed = 0.05f;
@@ -23,6 +22,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI displayNameTextRight;
     [SerializeField] private Animator portraitAnimatorLeft;
     [SerializeField] private Animator portraitAnimatorRight;
+    [SerializeField] private Animator DisputeBox;
 
     private Animator layoutAnimator;
 
@@ -39,6 +39,7 @@ public class DialogueManager : MonoBehaviour
     private string whichSide;
     private Coroutine displayLineCoroutine;
     private bool canContinueNextLine = false;
+    private bool isBeingDisputed;
 
     [Header("References")]
     private static DialogueManager instance;
@@ -61,7 +62,7 @@ public class DialogueManager : MonoBehaviour
         dialoguePanel.SetActive(false);
         layoutAnimator = dialoguePanel.GetComponent<Animator>();
         whichSide = "left";
-
+        isBeingDisputed = false;
         choicesText = new TextMeshProUGUI[choices.Length];
         int index = 0;
         foreach(GameObject choice in choices)
@@ -79,7 +80,7 @@ public class DialogueManager : MonoBehaviour
         }
         instance = this;
 
-        dialogueVariables = new DialogueVariables(globalsInkFile.filePath);
+        dialogueVariables = new DialogueVariables(loadGlobalsJSON);
     }
 
     
@@ -99,19 +100,32 @@ public class DialogueManager : MonoBehaviour
     }
 
     
-   
+   //The reference to the animator here can be deleted later, it was just for testing and understanding purposes for how to call external functions in INK
     public void EnterDialogueMode(TextAsset inkJSON)
     {
+        
         currentStory = new Story(inkJSON.text);
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
-
+        currentStory.variablesState["Disputed"] = false;
         dialogueVariables.StartListening(currentStory);
 
         dialogueText.text = currentStory.currentText;
         PlayerDisable.Instance.DisablePMovement(true);
 
-
+        //Checks for external functions, this is a test for animation, would be better suited to transition to another scene. 
+        
+        /*currentStory.BindExternalFunction("playEmote", (string emoteName) =>
+        {
+            if (emoteAnimator != null)
+            {
+                Debug.Log("Is this working");
+            }
+            else
+            {
+                return;
+            }
+        });*/
 
         //Reset Name, Portrait, and layout.
         displayNameTextLeft.text = "???";
@@ -125,11 +139,15 @@ public class DialogueManager : MonoBehaviour
 
     private void ExitDialogueMode()
     {
+        isBeingDisputed = false;
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
         dialogueText.text = "";
 
         dialogueVariables.StopListening(currentStory);
+
+
+        //currentStory.UnbindExternalFunction("playEmote");
 
         PlayerDisable.Instance.DisablePMovement(false);
         displayNameTextLeft.text = "???";
@@ -176,6 +194,32 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
+    public void DisputePress(InputAction.CallbackContext context)
+    {
+        
+        if (context.started && dialogueIsPlaying && !makingChoice)
+        {
+           
+            if (isBeingDisputed)
+            {
+                currentStory.variablesState["Disputed"] = false;
+                isBeingDisputed = false;
+                Debug.Log(isBeingDisputed);
+                DisputeBox.Play("isNotDisputed");
+            }
+            else
+            {
+                currentStory.variablesState["Disputed"] = true;
+                isBeingDisputed = true;
+                Debug.Log(isBeingDisputed);
+                DisputeBox.Play("isDisputed");
+            }
+            
+            
+            
+            
+        }
+    }
     
 
     private void DisplayChoices()
@@ -261,6 +305,8 @@ public class DialogueManager : MonoBehaviour
         Debug.Log("Is this displayLine working?");
     }
 
+     
+    
 
     private void HandleTags(List<string> currentTags)
     {
@@ -399,39 +445,7 @@ public class DialogueManager : MonoBehaviour
                         break;
                 }
             }
-
-            /*switch (tagKey)
-            {
-                case speakerTag:
-                    displayNameTextLeft.text = tagValue;
-
-                    break;
-                case portrait:
-                    Debug.Log("Portrait=" + tagValue);
-                    portraitAnimatorLeft.Play(tagValue);
-
-                    break;
-                case layout:
-            Debug.Log(tagValue);
-                    layoutAnimator.Play(tagValue);
-                    if(tagValue == "left")
-                    {
-                        Debug.Log("Left side is playing");
-                    }
-                    if (tagValue == "left")
-                    {
-                       Debug.Log("Left side is playing");
-                    }
-            break;
-
-                default:
-                    Debug.LogError("Tag came in, but it is not currently being handles: " + tag);
-                    break;
-            }
-            */
-
-        }
-            
+         }  
         }
     }
 

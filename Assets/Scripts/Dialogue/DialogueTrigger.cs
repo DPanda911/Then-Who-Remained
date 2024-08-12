@@ -9,8 +9,13 @@ public class DialogueTrigger : MonoBehaviour, IInteractable
     [Header("Ink JSON")]
     [SerializeField] private TextAsset InkJSON;
 
+    
+
     public bool playerInRange;
 
+    
+    
+    
     
 
     
